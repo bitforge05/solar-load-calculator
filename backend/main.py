@@ -24,9 +24,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = "uploads"
-OUTPUT_DIR = "outputs"
-TEMPLATE_PATH = "templates/solar_template.xlsx"
+# Use /tmp for Vercel/Serverless compatibility
+if os.environ.get("VERCEL"):
+    UPLOAD_DIR = "/tmp/uploads"
+    OUTPUT_DIR = "/tmp/outputs"
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+    OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
+
+TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates/solar_template.xlsx")
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
