@@ -7,7 +7,7 @@ import uuid
 from services.extractor import BillExtractor
 from services.excel_handler import ExcelHandler
 
-app = FastAPI()
+app = FastAPI(root_path="/api" if os.environ.get("VERCEL") else "")
 
 # Enable CORS for frontend integration
 origins = [

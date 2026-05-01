@@ -3,7 +3,7 @@ import { Upload, FileText, Download, CheckCircle, AlertCircle, Loader2, Zap } fr
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:8000');
 
 // Log warning if production is using localhost
 if (import.meta.env.PROD && API_BASE_URL.includes('localhost')) {
