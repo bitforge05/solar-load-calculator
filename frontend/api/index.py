@@ -6,12 +6,11 @@ import os
 import uuid
 import sys
 
-# Add the root directory to sys.path so we can import from backend.services
-# We are in frontend/api/index.py, so root is ../../
-sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
+# We are in frontend/api/index.py, so services is in ../services
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from backend.services.extractor import BillExtractor
-from backend.services.excel_handler import ExcelHandler
+from services.extractor import BillExtractor
+from services.excel_handler import ExcelHandler
 
 app = FastAPI()
 
@@ -27,7 +26,7 @@ app.add_middleware(
 # Storage (Using /tmp for Vercel)
 UPLOAD_DIR = "/tmp/uploads"
 OUTPUT_DIR = "/tmp/outputs"
-TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "../../backend/templates/solar_template.xlsx")
+TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "../templates/solar_template.xlsx")
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
