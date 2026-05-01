@@ -38,6 +38,10 @@ TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templa
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+@app.get("/")
+async def health_check():
+    return {"status": "ok", "message": "Solar Load Calculator API is running"}
+
 extractor = BillExtractor()
 excel_handler = ExcelHandler(TEMPLATE_PATH)
 
