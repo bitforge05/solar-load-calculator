@@ -5,6 +5,11 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
+// Log warning if production is using localhost
+if (import.meta.env.PROD && API_BASE_URL.includes('localhost')) {
+  console.warn("WARNING: Frontend is in production but VITE_API_BASE_URL is still pointing to localhost. API calls will likely fail.");
+}
+
 function App() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +45,11 @@ function App() {
       setResult(response.data);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.detail || "An error occurred during processing.");
+      if (err.code === 'ERR_NETWORK') {
+        setError(`Connection failed. If you are using the production site, please ensure VITE_API_BASE_URL is set correctly in Vercel. Current API: ${API_BASE_URL}`);
+      } else {
+        setError(err.response?.data?.detail || "An error occurred during processing.");
+      }
     } finally {
       setLoading(false);
     }
