@@ -47,21 +47,24 @@ async def upload_bill(file: UploadFile = File(...)):
     with open(input_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    mime_type = file.content_type
-    extracted_data = await extractor.extract_data(input_path, mime_type)
-    
-    if not extracted_data:
-        raise HTTPException(status_code=500, detail="Failed to extract data")
+    try:
+        mime_type = file.content_type
+        extracted_data = await extractor.extract_data(input_path, mime_type)
+        
+        if not extracted_data:
+            return {"error": "AI extraction failed. Check GEMINI_API_KEY.", "details": "No data returned from AI"}
 
-    output_filename = f"solar_calc_{file_id}.xlsx"
-    output_path = os.path.join(OUTPUT_DIR, output_filename)
-    excel_handler.fill_template(extracted_data, output_path)
+        output_filename = f"solar_calc_{file_id}.xlsx"
+        output_path = os.path.join(OUTPUT_DIR, output_filename)
+        excel_handler.fill_template(extracted_data, output_path)
 
-    return {
-        "file_id": file_id,
-        "extracted_data": extracted_data,
-        "download_url": f"/api/download/{output_filename}"
-    }
+        return {
+            "file_id": file_id,
+            "extracted_data": extracted_data,
+            "download_url": f"/api/download/{output_filename}"
+        }
+    except Exception as e:
+        return {"error": str(e), "type": type(e).__name__}
 
 @app.get("/api/download/{filename}")
 async def download_file(filename: str):

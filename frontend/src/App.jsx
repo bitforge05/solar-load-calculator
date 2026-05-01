@@ -43,11 +43,16 @@ function App() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setResult(response.data);
+      
+      if (response.data.error) {
+        setError(response.data.error);
+      } else {
+        setResult(response.data);
+      }
     } catch (err) {
       console.error(err);
       if (err.code === 'ERR_NETWORK') {
-        setError(`Connection failed. If you are using the production site, please ensure VITE_API_BASE_URL is set correctly in Vercel. Current API: ${API_BASE_URL}`);
+        setError(`Connection failed. Current API: ${API_BASE_URL}`);
       } else {
         setError(err.response?.data?.detail || "An error occurred during processing.");
       }
